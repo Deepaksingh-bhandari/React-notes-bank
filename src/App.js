@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import 'bulma/css/bulma.min.css';
+import { Navbar } from './components/Navbar';
+import { About } from './components/About';
+import { Home } from './components/Home';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes,Route,useLocation } from "react-router-dom";
+
+import NoteState from './contexts/NoteState';
+
 
 function App() {
-  return (
-   <div className='mx-2 my-2'> Hello There, using Tailwind </div>
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
+
+  
+  
+return (<>
+  <NoteState>
+    <Router>
+      <Navbar title="iNotebook" />
+      <Routes>
+        <Route exact path="/about" element={<About />}>          
+        </Route>
+        <Route exact path="/" element={<Home />}>
+          
+        </Route>
+      </Routes>
+    </Router>
+    </NoteState>
+  </>
   );
 }
 

@@ -17,9 +17,9 @@ router.post('/createuser', userCreattionValidations, async (req, res) => {
         try {
             let user = await User.findOne({ email: req.body.email })
             if (user)
-                return res.status(400).json({ status: "Failed ", msg: "User with this email already exists" })
+                return res.status(400).json({ status: "failed ", msg: "User with this email already exists" })
 
-            // Using Password mechanism along with Salt & Pepper methods 
+            // Using Password mechanism along with Salt & Pepper methods - to store hash password in database 
             var salt = bcrypt.genSaltSync(10);
             var hashPassword = bcrypt.hashSync(req.body.password, salt);
 
@@ -35,17 +35,17 @@ router.post('/createuser', userCreattionValidations, async (req, res) => {
                     }
                     // Providing JWT token to the user - AuthToken
                     const authToken = jwt.sign(userData, JWT_SECRET)
-                    return res.status(200).json({ status: "Success", userDetails: req.body, authToken })
+                    return res.status(200).json({ status: "success", userDetails: req.body, authToken })
                 })
-                .catch((err) => { return res.status(400).json({ status: "Failed", mssg: err.mssg }) })
+                .catch((err) => { return res.status(400).json({ status: "failed", mssg: err.mssg }) })
         }
         catch (error) {
-            console.log(error.error.message);
-            return res.status(500).json({ status: "Failed", mssg: "Internal Server error occured" })
+            console.log(error);
+            return res.status(500).json({ status: "failed", mssg: "Internal Server error occured" })
         }
 
     }
-    else return res.status(400).json({ status: "Failed", msg: errors.array() });
+    else return res.status(400).json({ status: "failed", msg: errors.array() });
 })
 
 // ROUTE2: POST API TO Authenticate a user
@@ -54,19 +54,19 @@ router.post('/login', userLoginValidations, async (req, res) => {
     const { email, password } = req.body
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
-        return res.status(400).json({ status: "Failed", msg: errors.array() })
+        return res.status(400).json({ status: "failed", msg: errors.array() })
     }
     else {
         try {
             // Checking if user exists already or not
             let user = await User.findOne({ email })
             if (!user) {
-                return res.status(400).json({ status: "Failed", msg: "Try to login with correct credentials" })
+                return res.status(400).json({ status: "failed", msg: "Try to login with correct credentials" })
             }
             // Comparing user password in the database
             const pwdCompare = bcrypt.compareSync(password, user.password);
             if (!pwdCompare) {
-                return res.status(400).json({ status: "Failed", msg: "Try to login with correct credentials" })
+                return res.status(400).json({ status: "failed", msg: "Try to login with correct credentials" })
             }
 
 
@@ -77,7 +77,7 @@ router.post('/login', userLoginValidations, async (req, res) => {
                 }
             }
             const authToken = jwt.sign(userData, JWT_SECRET)
-            return res.status(200).json({ status: "Success", msg: "Logged in Successfully", authToken })
+            return res.status(200).json({ status: "success", msg: "Logged in successfully", authToken })
 
         }
         catch (err) {

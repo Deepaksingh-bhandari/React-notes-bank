@@ -7,7 +7,7 @@ const { body, validationResult } = require('express-validator');
 // ROUTE1: API to fetch all notes
 router.get('/fetchallnotes', fetchUser, async (req, res) => {
   const notes = await Notes.find({ user: req.user.id })
-  res.status(200).json({ status: "Success", data: notes })
+  res.status(200).json({ status: "success", data: notes })
 })
 
 // ROUTE2: API to add new notes
@@ -16,16 +16,16 @@ router.post('/addNote', fetchUser, noteValidation, async (req, res) => {
   let errors = validationResult(req)
   const { title, description, tag } = req.body
   if (!errors.isEmpty()) {
-    return res.status(400).json({ status: "Failed", msg: errors.array() })
+    return res.status(400).json({ status: "failed", msg: errors.array() })
   }
 
   // Creating Notes once user is verified via JWT token - & addin user id to the notes
   Notes.create({
     title, description, tag, user: req.user.id
   }).then(() => {
-    res.status(200).json({ status: "Success", data: "Note Added" })
+    res.status(200).json({ status: "success", data: "Note Added" })
   }).catch((err) => {
-    res.status(400).json({ status: "Failuer", data: "Some error occured while creating note" })
+    res.status(400).json({ status: "failed", data: "Some error occured while creating note" })
   })
 
 })

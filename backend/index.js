@@ -1,6 +1,10 @@
 const express = require('express')
 const connectToMongo=require('./db')
 const app = express()
+var cors = require('cors')
+ 
+app.use(cors())     //To disable cors-issue
+
 const port = 5000
 connectToMongo();
 
