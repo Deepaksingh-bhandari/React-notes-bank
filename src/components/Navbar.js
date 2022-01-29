@@ -1,31 +1,39 @@
-import React from 'react';
-import {Link,useLocation} from 'react-router-dom'
+import React, { useContext } from 'react';
+import { Link, useLocation , useNavigate} from 'react-router-dom'
+import UserContext from '../contexts/UserContext';
 
 export const Navbar = (props) => {
+  const { userDetails,userLogOut } = useContext(UserContext)
+  const location = useLocation();
+  const navigate=useNavigate();
 
-  let location = useLocation();
+  const handleLogIn=()=>{
+   if(userDetails.loggedIn)
+   userLogOut();
+    navigate('/login');
+  }
 
   return (<div>
     <nav className="navbar is-info" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <a className="navbar-item" >
+        <span className="navbar-item" >
           {props.title}
-        </a>
+        </span>
 
-        <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </a>
+        </span>
       </div>
 
       <div id="navbarBasicExample" className="navbar-menu">
         <div className="navbar-start">
-          <Link className={`navbar-item ${location.pathname==="/"?"is-active":""}`} to="/">
+          <Link className={`navbar-item ${location.pathname === "/" ? "is-active" : ""}`} to="/">
             Home
           </Link>
 
-          <Link className={`navbar-item ${location.pathname==="/about"?"is-active":""}`} to="/about">
+          <Link  className={`navbar-item ${location.pathname === "/about" ? "is-active" : ""}`} to="/about">
             About
           </Link>
 
@@ -33,13 +41,13 @@ export const Navbar = (props) => {
 
         <div className="navbar-end">
           <div className="navbar-item">
-            <div className="buttons">
-              <a className="button is-primary">
+            <div className="buttons " >
+              <Link className={`button is-primary ${userDetails.loggedIn?'is-hidden':''}`} to="/signup">
                 <strong>Sign up</strong>
-              </a>
-              <a className="button is-light">
-                Log in
-              </a>
+              </Link>
+              <button className={`button ${userDetails.loggedIn?'is-danger':''}`} onClick={handleLogIn} to="/login">
+                {userDetails.loggedIn?'Log out':'Log In'}
+              </button>
             </div>
           </div>
         </div>

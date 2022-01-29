@@ -3,10 +3,11 @@ import { useContext,useState } from 'react';
 import NoteContext from '../contexts/NoteContext';
 
 export const EditNoteModal = (props,key) => {
-
+    
+    let {note,active,setModalActive} = props
+    
     const refClose = useRef(null);
     const {editNote}=useContext(NoteContext)
-    let {note,active,setModalActive} = props
 
     const [noteData, setnoteData] = useState({title:note.title, description:note.description, tag:note.tag});
 

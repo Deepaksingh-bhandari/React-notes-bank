@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React,{ useState ,useEffect,useContext} from "react";
 import NoteContext from "./NoteContext";
-import { useState } from "react";
+import UserContext from "./UserContext";
 
 const NoteState = (props) => {
     const host = "http://localhost:5000"
+    const authToken=sessionStorage.getItem('authToken')
+  const {userDetails} = useContext(UserContext);
 
     useEffect(() => {
-      fetchNote();
-    }, []);
-    
+        if(userDetails.loggedIn)
+        fetchNote();
+      }, [userDetails]);
+
     let initialNotes = [];
     // Initial notes to be fetched from the API
     const [notes, setnotes] = useState(initialNotes);
@@ -23,7 +26,8 @@ const NoteState = (props) => {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'authToken': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU"
+                'authToken':authToken 
+                // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU"
             },
             body: JSON.stringify({ title, description, tag }) // body data type must match "Content-Type" header
         });
@@ -48,7 +52,8 @@ const NoteState = (props) => {
             method: 'PUT', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'authToken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU'
+                'authToken': authToken 
+                // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU'
             },
             body: JSON.stringify(data) // body data type must match "Content-Type" header
         });
@@ -73,7 +78,8 @@ const NoteState = (props) => {
             method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'authTOken':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU'
+                'authTOken': authToken
+                // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU'
                 // token
             },
         });
@@ -98,7 +104,8 @@ const NoteState = (props) => {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
-                'authToken':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU' 
+                'authToken':authToken
+                // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFmMWVlYzlhZjIxMmZhMzg4Y2FiZjQ1In0sImlhdCI6MTY0MzI0NTI5Mn0.T-TZH-pgoYiGdAsvm-dr8A1FhjFtnId86-nfEgU-nNU' 
                 // token
 
             }// body data type must match "Content-Type" header
@@ -107,13 +114,16 @@ const NoteState = (props) => {
         let resp = await response.json();
 
         if (resp.status === "success") {//   success ALERT TO SHOW 
+            console.log("fetched Notes succesfully",resp.data);
             setnotes(resp.data)
         }
         else {//  SOME ERROR ALERT}
         }
     }
+
+
     return (
-        <NoteContext.Provider value={{ notes, addNote, editNote, deleteNote }}>
+        <NoteContext.Provider value={{ notes, addNote, editNote, deleteNote ,fetchNote}}>
             {props.children}
         </NoteContext.Provider>
     );

@@ -48,7 +48,7 @@ router.post('/createuser', userCreattionValidations, async (req, res) => {
     else return res.status(400).json({ status: "failed", msg: errors.array() });
 })
 
-// ROUTE2: POST API TO Authenticate a user
+// ROUTE2: POST API TO LOG IN a user
 let userLoginValidations = [body('email').isEmail().exists(), body('password').isLength({ min: 5 }).exists()]
 router.post('/login', userLoginValidations, async (req, res) => {
     const { email, password } = req.body
