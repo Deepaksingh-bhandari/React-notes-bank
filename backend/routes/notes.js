@@ -51,10 +51,10 @@ router.put('/updatenote/:id', fetchUser, async (req, res) => {
     }
     
     await Notes.findByIdAndUpdate(req.params.id,{$set:newNote},{new:true})
-    return res.status(200).json({staus:"success",data:"Note Updated "})
+    return res.status(200).json({status:"success",data:"Note Updated "})
     
   } catch (error) {
-    return res.status(500).json({staus:"failed",data:"Some internal server error occured "})
+    return res.status(500).json({status:"failed",data:"Some internal server error occured "})
     
   }
   
@@ -72,10 +72,10 @@ router.delete('/deletenote/:id', fetchUser, async (req, res) => {
     }
     
     await Notes.findByIdAndDelete(req.params.id)
-    return res.status(200).json({staus:"success",data:"Note Deleted "})
+    return res.status(200).json({status:"success",data:"Note Deleted "})
   }
    catch (error) {
-    return res.status(500).json({staus:"failed",data:"Some internal server error occured "})
+    return res.status(500).json({status:"failed",data:"Some internal server error occured "})
     
   }  
   

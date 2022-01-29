@@ -4,7 +4,6 @@ import UserContext from "./UserContext";
 
 const NoteState = (props) => {
     const host = "http://localhost:5000"
-    const authToken=sessionStorage.getItem('authToken')
   const {userDetails} = useContext(UserContext);
 
     useEffect(() => {
@@ -18,8 +17,8 @@ const NoteState = (props) => {
 
     // 1 Operation - ADD NOTE
     const addNote = async (title, description, tag) => {
+        const authToken=sessionStorage.getItem('authToken')
         console.log("Add Note Called :", title, description, tag)
-
         let url = `${host}/api/notes/addNote`
 
         const response = await fetch(url, {
@@ -45,6 +44,8 @@ const NoteState = (props) => {
     }
     // 2nd Operation - EDIT NOTE
     const editNote = async (id, data) => {
+        const authToken=sessionStorage.getItem('authToken')
+
         console.log("edit Note Called");
         let url = `${host}/api/notes/updatenote/${id}`
 
@@ -60,6 +61,7 @@ const NoteState = (props) => {
         let resp = await response.json(); // parses JSON response into native JavaScript objects
 
         if (resp.status === "success") {//   success ALERT TO SHOW 
+            fetchNote()
             console.log("Note edited succesfully")
         }
         else {
@@ -69,7 +71,9 @@ const NoteState = (props) => {
     }
 
     // 3rd Operation - DELETE NOTE
-    const deleteNote = async (id,token) => {
+    const deleteNote = async (id) => {
+        const authToken=sessionStorage.getItem('authToken')
+
         console.log("Delete note triggered: ", id)
 
         let url = `${host}/api/notes/deletenote/${id}`
@@ -87,10 +91,12 @@ const NoteState = (props) => {
 
         if (resp.status === "success") {//   success ALERT TO SHOW 
             console.log("Note deleted succesfully")
+            fetchNote()
 
         }
         else {
             console.log("Note deletion failed")
+            alert("Note deletion failed")
             //  SOME ERROR ALERT
         }
         // Calling fetch notes to fetch updated notes
@@ -98,7 +104,8 @@ const NoteState = (props) => {
     }
 
     //4th Operation - FETCH ALL NOTES
-    const fetchNote = async (token) => {
+    const fetchNote = async () => {
+        const authToken=sessionStorage.getItem('authToken')
         let url = `${host}/api/notes/fetchallnotes`
         const response = await fetch(url, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
